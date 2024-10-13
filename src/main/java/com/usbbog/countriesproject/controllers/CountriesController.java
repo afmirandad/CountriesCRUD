@@ -1,17 +1,11 @@
 package com.usbbog.countriesproject.controllers;
 
-import java.util.List;
-import java.util.Optional;
+import java.util.Map;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 import com.usbbog.countriesproject.services.CountriesService;
 import com.usbbog.countriesproject.entities.CountriesEntity;
@@ -19,41 +13,38 @@ import com.usbbog.countriesproject.entities.CountriesEntity;
 @RestController
 @RequestMapping("/api/v1/countries")
 public class CountriesController {
-	
-	private final CountriesService countryService;
-	
+
 	@Autowired
-	public CountriesController(CountriesService countryService) {
-		this.countryService = countryService;
-	}
+	private CountriesService countriesService;
 	
 	//Method to get all countries
 	@GetMapping
-	public List<CountriesEntity> getCountries(){
-		return countryService.getAllCountries();
+	public ResponseEntity<Map<String, Object>> getAllCountries() {
+		return countriesService.getAllCountries();
 	}
 	
 	@GetMapping("/{id}")
 	//Method to get one country by id
-	public Optional<CountriesEntity> getCountry(@PathVariable UUID id){
-		return countryService.getCountryById(id);
+	public ResponseEntity<?> getCountry(@PathVariable UUID id){
+		return countriesService.getCountryById(id);
 	}
 	
 	@PostMapping
 	//Method to create one country
-	public String createCountry(){
-		return "POST COUNTRY";
+	public ResponseEntity<?> createCountry(@RequestBody CountriesEntity country){
+		return countriesService.createCountry(country);
 	}
 	
 	@PutMapping("/{id}")
 	//Method to update one country
-	public String updateCountry(){
-		return "PUT COUNTRY";
+	public ResponseEntity<Map<String, Object>> updateCountry(
+			@PathVariable UUID id, @RequestBody CountriesEntity country) {
+		return countriesService.updateCountry(id, country);
 	}
 	
 	@DeleteMapping("/{id}")
 	//Method to delete one country
-	public String deleteCountry(){
-		return "DELETE COUNTRY";
+	public ResponseEntity<Map<String, Object>> deleteCountry(@PathVariable UUID id){
+		return countriesService.deleteCountry(id);
 	}
 }
